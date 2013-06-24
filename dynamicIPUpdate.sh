@@ -5,12 +5,14 @@ USERNAME="username"
 XAUTHKEY="authkey"
 DOMAINNAME="domainname"
 SERVERNAME="servername"
+TARGETNAME="targetname"
+TTL="60"
 
-echo "Dozens dynamic IP setter version 0.3b"
+echo "Dozens Alias IP Address setter version 0.1"
 
 # Get Global IP address
-GLOBALIP=$(curl -s ifconfig.me)
-echo "Your global IP is $GLOBALIP"$'\n'
+GLOBALIP=$(dig +short $TARGETNAME)
+echo "Your Target IP Address is $GLOBALIP"$'\n'
 
 # auth initialization
 echo "auth initialization start."
@@ -26,6 +28,6 @@ echo "$SERVERNAME record id is $RECORDID""."$'\n'
 
 # Set IP Address
 echo "Recode update in progress..."
-RESULT=$(curl -s -d "{\"prio\":\"\", \"content\":\"$GLOBALIP\", \"ttl\":\"7200\"}" http://dozens.jp/api/record/update/$RECORDID.json -H X-Auth-Token:$MYKEY -H "Host: dozens.jp" -H "Content-Type:application/json" | sed -e 's/\[/\[ /g' -e 's/\]/ \]/g' -e 's/},{/} {/g' | tr " " "\n" | grep $RECORDID)
+RESULT=$(curl -s -d "{\"prio\":\"\", \"content\":\"$GLOBALIP\", \"ttl\":\"$TTL\"}" http://dozens.jp/api/record/update/$RECORDID.json -H X-Auth-Token:$MYKEY -H "Host: dozens.jp" -H "Content-Type:application/json" | sed -e 's/\[/\[ /g' -e 's/\]/ \]/g' -e 's/},{/} {/g' | tr " " "\n" | grep $RECORDID)
 echo "Dozens server says : $RESULT"$'\n'
 echo "Script is done!"$'\n'
